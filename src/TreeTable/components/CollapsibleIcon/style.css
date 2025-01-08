@@ -1,0 +1,12 @@
+.collapsible-icon {
+    cursor: pointer;
+    transition: 200ms;
+
+    &:hover {
+        color: blue;
+    }
+}
+
+.collapsible-icon--collapsed {
+    transform: rotate(-90deg);
+}

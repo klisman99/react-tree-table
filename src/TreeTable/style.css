@@ -1,0 +1,37 @@
+.tree-grid__identification-column {
+    display: flex;
+    align-items: center;
+}
+
+.table-container {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background: #eee;
+}
+
+th {
+    text-align: left;
+}
+
+tr {
+    border-bottom: 1px solid #ddd;
+
+    &:hover {
+        background-color: #D6EEEE;
+    }
+}
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 5px;
+}
