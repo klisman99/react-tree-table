@@ -15,8 +15,12 @@ export const createStore = () => create<TreeTableState>(
     (set, get) => ({
         columns: [],
         rows: [],
-        setColumns: (columns: Column[]) => set({ columns }),
-        setRows: (rows: Row[]) => set({ rows }),
+        setColumns(columns: Column[]) {
+            set({ columns });
+        },
+        setRows(rows: Row[]) {
+            set({ rows });
+        },
         toggleCollapse(rowId) {
             const { rows } = get();
             const row = rows.find((r) => r.id === rowId)!;

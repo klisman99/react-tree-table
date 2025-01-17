@@ -1,10 +1,10 @@
 import CollapsibleIcon from '../CollapsibleIcon';
-import { Row } from '#types';
+import { Row as RowType } from '#types';
 import { TreeTableState } from '#tree-table/store';
 import useStore from '#tree-table/hooks/useStore';
 
 interface RowProps {
-    row: Row;
+    row: RowType;
 }
 
 const selector = ({
@@ -15,7 +15,7 @@ const selector = ({
     toggleCollapse
 });
 
-export default function Rowle({ row }: RowProps) {
+export default function Row({ row }: RowProps) {
     const { columns, toggleCollapse } = useStore(selector);
 
     return (
@@ -25,7 +25,7 @@ export default function Rowle({ row }: RowProps) {
                     {key === 0
                         ? (
                             <div style={{ paddingLeft: (row.depth * 25) + "px" }} className='tree-grid__identification-column'>
-                                {row.hasChildren && (
+                                {row.children.length > 0 && (
                                     <CollapsibleIcon
                                         collapsed={row.collapsed}
                                         onClick={() => toggleCollapse(row.id)}

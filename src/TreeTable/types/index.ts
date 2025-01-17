@@ -6,6 +6,7 @@ export interface InitialColumn {
     id: string | number;
     header: CellContent;
     content: (row: Row) => CellContent;
+    size?: number | "auto";
 }
 
 export interface Column extends InitialColumn {
@@ -15,16 +16,16 @@ export interface Column extends InitialColumn {
 export interface InitialRow {
     id: string | number;
     parentId?: string | number | null | undefined;
-    data: Object;
+    data: Object | null | undefined;
     collapsed?: boolean | undefined;
 }
 
 export interface Row extends InitialRow {
     id: string;
     parentId: string | null;
-    collapsed: boolean;
+    collapsed?: boolean;
     depth: number;
-    hasChildren: boolean;
+    children: string[];
 }
 
 export interface TreeModel {

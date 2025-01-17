@@ -2,33 +2,33 @@ import { InitialRow, Row } from "#types";
 
 export default function initializeRows(rows: InitialRow[]) {
     const existingIds: string[] = [];
-    const parentRows: { [id: string]: number } = {};
-    const initialized = rows.map(
-		(r) => {
-            if (existingIds.some((id) => id === r.id)) {
-                throw new Error(`Found a row with repeated id: [${r.id}]`);
+    const initialized = new Map<string, Row>(
+        rows.map(
+            (r) => {
+                if (existingIds.some((id) => id === r.id)) {
+                    throw new Error(`Found a row with repeated id: [${r.id}]`);
+                }
+    
+                const rowId = r.id.toString();
+    
+                existingIds.push(rowId);
+    
+                const row = {
+                    ...r,
+                    id: rowId,
+                    parentId: r.parentId?.toString() || null,
+                    collapsed: r.collapsed || false,
+                    children: [] as string[]
+                } as Row;
+    
+                if (r.parentId) {
+                    row.collapsed = r.collapsed || false;
+                }
+    
+                return [row.id, row];
             }
-
-            const rowId = r.id.toString();
-
-            existingIds.push(rowId);
-
-            if (r.parentId) {
-                parentRows[r.parentId] = -1;
-            }
-
-            return ({
-                ...r,
-                id: rowId,
-                parentId: r.parentId || null,
-                collapsed: r.collapsed || false
-            }) as Row;
-        }
-	);
-
-    for (let key in parentRows) {
-        parentRows[key] = initialized.findIndex((r) => r.id === key);
-    }
+        )
+    );
 
     function getDepth(row: Row) {
         if (row.parentId === null) {
@@ -39,7 +39,7 @@ export default function initializeRows(rows: InitialRow[]) {
         let parentId = row.parentId;
 
         while (true) {
-            const parentRow = initialized[parentRows[parentId]];
+            const parentRow = initialized.get(parentId)!;
 
             if (parentRow.parentId === null) {
                 return depth;
@@ -50,11 +50,18 @@ export default function initializeRows(rows: InitialRow[]) {
         }
     }
 
-    return initialized.map(
-        (r) => ({
-            ...r,
-            depth: getDepth(r),
-            hasChildren: !!parentRows[r.id]
-        })
+    initialized.forEach(
+        (r) => {
+            if (r.parentId) {
+                initialized.get(r.parentId)?.children.push(r.id);
+            }
+
+            initialized.set(r.id, {
+                ...r,
+                depth: getDepth(r)
+            });
+        }
     );
+
+    return Array.from(initialized.values());
 }
